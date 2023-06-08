@@ -17,6 +17,8 @@ import { UserContextType } from "../schemas/user.schema"
 import StoreModal from '../components/StoreModal/StoreModal'
 import Maps from '../components/Home/Maps'
 
+const CALCULATE_ROUTE_PERMISSION = "calculate_route"
+
 const columns = [
   {
     field: 'code',
@@ -153,7 +155,7 @@ export default function Home() {
             {
               userContext.permissions.map(permission => (
                 // protected funcionality
-                permission === "calculate_row" ?
+                permission === CALCULATE_ROUTE_PERMISSION ?
                 (
                   <Container key={permission}>
                     <Maps stores={state.stores} />
