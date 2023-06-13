@@ -1,5 +1,6 @@
 import React from 'react'
 import { toast } from 'react-toastify'
+import { Navigate } from 'react-router-dom'
 import axios, { AxiosError } from 'axios'
 import {
   Container,
@@ -12,10 +13,11 @@ import { ServerError } from '../schemas/error.schema'
 import { Store } from '../schemas/store.schema'
 import StoreService from '../services/store.service'
 import DataTable from "../components/Common/DataTable"
-import UserContext from "../contexts/user.context"
+import UserContext, { initialContextUserState } from "../contexts/user.context"
 import { UserContextType } from "../schemas/user.schema"
 import StoreModal from '../components/StoreModal/StoreModal'
 import Maps from '../components/Home/Maps'
+import Utils from '../utils'
 
 const CALCULATE_ROUTE_PERMISSION = "calculate_route"
 
@@ -60,7 +62,7 @@ export default function Home() {
 
   const [state, setState] = React.useState(initState)
 
-  const { userContext } = React.useContext(
+  const { userContext, setUserContext } = React.useContext(
     UserContext
   ) as UserContextType
 
@@ -124,6 +126,12 @@ export default function Home() {
     }
   }
 
+  function onLogOut () {
+    setUserContext(initialContextUserState)
+    Utils.removeCookieAuth()
+    return <Navigate to="/login" replace />
+  }
+
   const actions = [
     {
       label: 'D', // Download
@@ -145,7 +153,10 @@ export default function Home() {
             title="Stores"
             subheader="September 25, 2023"
             action={
-              <Button onClick={handleModal}>Add store</Button>
+              <React.Fragment>
+                <Button onClick={handleModal}>Add store</Button>
+                <Button onClick={onLogOut}>Log out</Button>
+              </React.Fragment>
             }
           />
           <CardContent>
